@@ -27,24 +27,23 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Arena extends JPanel implements ActionListener{
 JFrame ex;
-    private final int Lebar = 400; //menentukan ukuran layar
+    private final int Lebar = 400;      //menentukan ukuran layar
     private final int Tinggi = 400; 
-    private final int UkuranBola = 10;
-    private final int ALL_DOTS = 1000; // menentukan jumlah maksimum kemungkinan titik di layar
-    private final int RAND_POS = 30; //Konstanta RAND_POS digunakan untuk menghitung posisi acak makanan
-    private final int DELAY = 100;
+    private final int UkuranBola = 10;      //jarak antara badan ularnya satu sama lain
+    private final int ALL_DOTS = 1000;      // menentukan jumlah maksimum kemungkinan titik di layar
+    private final int RAND_POS = 30;        //Konstanta RAND_POS digunakan untuk menghitung posisi acak makanan
+    private final int DELAY = 70;           //kecepatan bergerak ular
 private int scorenya,scoretinggi,highscore = 0;
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
-    private int dots;
-    private int makanan_x;
-    private int makanan_y;
+    private int dots;           //jumlah badan ularnya
+    private int makanan_x;      // makanan terhadap x
+    private int makanan_y;      // makanan terhadap y
     private boolean ArahKiri = false;
     private boolean ArahKanan = true;
     private boolean ArahAtas = false;
@@ -52,9 +51,9 @@ private int scorenya,scoretinggi,highscore = 0;
     private boolean inGame = true;
   
     private Timer timer;
-    private Image ball;
-    private Image makanan;
-    private Image kepala;
+    private Image ball;     // logo its
+    private Image makanan;  // tahu tek
+    private Image kepala;   // kepala ular
     private int key;
    
     
@@ -84,7 +83,7 @@ private int scorenya,scoretinggi,highscore = 0;
 
     private void initGame() {
 
-        dots = 6;    // membuat ular
+        dots = 6;    // membuat badan ular
 
         for (int z = 0; z < dots; z++) {
             x[z] = Lebar/20;
@@ -104,7 +103,7 @@ private int scorenya,scoretinggi,highscore = 0;
     }
     private void updatescore(){
          try {            
-            Connection c=ClassDB.getkoneksi();
+            Connection c=ClassDB.getkoneksi();          // mengupdate score berkala
            Statement s=(Statement)c.createStatement();
         String cektinggi="Select * from score  = '" ;
             ResultSet r=s.executeQuery(cektinggi);
@@ -138,7 +137,7 @@ private int scorenya,scoretinggi,highscore = 0;
             }
 
             Toolkit.getDefaultToolkit().sync();
-             String msg = "Score = "+scorenya +" Tahu Tek";
+             String msg = "Score = "+scorenya +" Tahu Tek";     // menampilkan live score saat game dimainkan
              
         Font small = new Font("Helvetica", Font.BOLD, 10);
         FontMetrics metr = getFontMetrics(small);
@@ -177,10 +176,11 @@ private int scorenya,scoretinggi,highscore = 0;
         }        
     }
     private void gameOver(Graphics g) {
-        updatescore();
+        updatescore();   //pada saat gameover membuat window baru
+        
         if (scorenya <= highscore){
-            String msg = "Score Anda = "+ scorenya + " Tahu Tek";
-        Font small = new Font("Helvetica", Font.BOLD, 14);
+            String msg = "Score Anda = "+ scorenya + " Tahu Tek";   // jika skor sama dengan 0 maka akan menampilkan ini
+        Font small = new Font("Helvetica", Font.BOLD, 14);          
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
@@ -188,23 +188,22 @@ private int scorenya,scoretinggi,highscore = 0;
         g.drawString(msg, (Lebar - metr.stringWidth(msg)) / 2, Tinggi / 2);
        
         }
-        else{
-            String msgg = "Congratulations! Your High Score is "+ scorenya + " Tahu Tek";
+        else {            
+            String msgg = "Congratulations! Your High Score is "+ scorenya + " Tahu Tek";    // jika skor lebih dari 0 maka akan menampilkan ini
         Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = getFontMetrics(small);
-
-        g.setColor(Color.YELLOW);
+        FontMetrics metr = getFontMetrics(small);       
+        g.setColor(new Color(255,204,0));
         g.setFont(small);
         g.drawString(msgg, (Lebar - metr.stringWidth(msgg)) / 2, Tinggi / 2);
        
         }
+        
        
-           
     }
     
        
     private void CekMakanan() {  // Jika makanan bertabrakan dengan kepala ularnya, jumlah badan ularnya 
-                                 // bertambah dan pointnya juga bertambah
+                                 // bertambah 1 dan pointnya juga bertambah
 
         if ((x[0] == makanan_x) && (y[0] == makanan_y)) {
 
@@ -212,11 +211,11 @@ private int scorenya,scoretinggi,highscore = 0;
             scorenya = scorenya + 1;
                           
     
-            LokasiMakanan();
+            LokasiMakanan(); // selanjutnya menjalankan method lokasi makanan untuk menampilkan makanan secara random
         }
     }
 
-    private void pindah() {
+    private void pindah() {         // proses berjalannya ular belok ke kiri, kanan, atas, bawah
 
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
@@ -240,7 +239,8 @@ private int scorenya,scoretinggi,highscore = 0;
         }
     }
 
-    private void CekTabrakan() {
+    private void CekTabrakan() {    //di method ini ngecek ularnya nabrak dirinya sendiri atau nabrak dinding
+                                    // kalau salah 1 itu terpenuhi maka game over
 
         for (int z = dots; z > 0; z--) {
 
@@ -278,7 +278,7 @@ private int scorenya,scoretinggi,highscore = 0;
 
     private void LokasiMakanan() {
 
-        int r = (int) (Math.random() * RAND_POS);
+        int r = (int) (Math.random() * RAND_POS);   // memberi lokasi makanan secara acak
         makanan_x = ((r * UkuranBola));
 
         r = (int) (Math.random() * RAND_POS);
@@ -287,7 +287,7 @@ private int scorenya,scoretinggi,highscore = 0;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+                                         // method untuk menjalankan proses in gamenya
         if (inGame) {
 
             CekMakanan();
@@ -299,8 +299,9 @@ private int scorenya,scoretinggi,highscore = 0;
     }
 
     private class TAdapter extends KeyAdapter {
-
-        @Override
+                                        // key yang dipakai untuk menjalankan ular
+        @Override                       // menggunakan keyboard panah
+                                        // jika memanggil keyevent/vk left berati panah kiri bernilai true
         public void keyPressed(KeyEvent e) {
 
             int key = e.getKeyCode();
@@ -347,4 +348,6 @@ private int scorenya,scoretinggi,highscore = 0;
             }    
         }
     }
-}
+    
+}   
+  
