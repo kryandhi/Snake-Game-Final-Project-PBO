@@ -1,7 +1,8 @@
 # Snake-Game-Final-Project-PBO
-Source Code Snake Game : Tahu Tek Hunter
-Ada 3 file java yang dipake Arena, GUIsnake, ular
-Tugas Akhir Praktikum Matkul PBO Departemen Matematika Insitut Teknologi Sepuluh Nopember
+Source Code Snake Game : Tahu Tek Hunter. Ada 3 file java yang dipake Arena, GUIsnake, ular.
+
+
+Tugas Akhir Praktikum Matkul PBO, Departemen Matematika, Insitut Teknologi Sepuluh Nopember
 
 Tampilan GUI
 
